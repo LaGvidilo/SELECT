@@ -1,0 +1,97 @@
+<AffPrincipal>:
+	gridmain:gridmain
+	GridLayout:
+		id: gridmain
+		#padding: 20
+		#spacing: 10
+		cols: 2            
+		#size_hint_y:  None
+		#height: self.minimum_height
+		box:box
+		BoxLayout:
+			id: box
+			orientation: "vertical"
+			boxf:boxf
+			boxt:boxt
+			BoxLayout:
+				id: boxf
+				orientation: "horizontal"
+				size_hint_y: .2
+				spinaero:spinaero
+				spinaero2:spinaero2
+				Spinner:
+					id: spinaero
+					text: root.get_spin_f(1)
+					values: root.get_spin_f(0)
+					size_hint_x: .2
+					on_release: 
+						root.update()
+				Button:
+					text: "SELECT"
+					size_hint_x: .2
+					on_release: 
+						root.confirm(spinaero.text)
+										
+				Spinner:
+					id: spinaero2
+					text: root.get_spin_f2(1)
+					values: root.get_spin_f2(0)
+					on_release: 
+						root.update2()
+
+				Button:
+					text: "LOAD"
+					size_hint_x: .2
+					on_release: 
+						root.confirmload()
+																
+
+			
+			BoxLayout:
+				id: boxt
+				orientation: "horizontal"
+				boxmode:boxmode
+				BoxLayout:
+					id: boxmode
+					orientation: "horizontal"
+
+
+
+
+			#BoxLayout:
+				#id: boxcred
+				#orientation: "vertical"
+				#size_hint_y: .8
+		#Button:
+			#text: "A propos..."
+			#on_release: root.parent.parent.current = 'Jeu'
+			#size_hint_y: None
+			#height: '29sp'
+
+
+
+
+<Aff>:
+    scmanageBIG:scmanageBIG
+    ScreenManager:
+        id: scmanageBIG
+        size_hint_x:1
+        Screen:
+            name:'AffPrincipal'
+            AffPrincipal
+
+#text: "%s"%(root.get_esclaves())
+
+
+
+<InfoPopup>:
+    cols:1
+    Label:
+        text: root.text
+    GridLayout:
+        cols: 2
+        size_hint_y: None
+        height: '44sp'
+        Button:
+            text: 'Ok'
+            on_release: root.dispatch('on_answer','Ok')

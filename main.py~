@@ -1,0 +1,155 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr  6 13:47:00 2014
+
+@author: coelho
+"""
+from __future__ import print_function
+import kivy
+kivy.require('1.8.0')
+
+
+from kivy.app import App
+#from kivy.clock import Clock
+from kivy.metrics import Metrics
+#from kivy.properties import NumericProperty
+#from kivy.properties import StringProperty
+#from kivy.uix.anchorlayout import AnchorLayout
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+#from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+#from kivy.uix.scatter import Scatter
+from kivy.uix.treeview import TreeView, TreeViewLabel,TreeViewNode
+from kivy.uix.widget import Widget
+#from kivy.lang import Builder
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.spinner import Spinner
+from kivy.uix.scrollview import ScrollView
+#from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition, SwapTransition, WipeTransition, SlideTransition
+#from kivy.uix.slider import Slider
+from kivy.uix.checkbox import CheckBox
+#from kivy.graphics import Color, Ellipse, Rectangle
+from kivy.config import Config
+#from kivy.logger import Logger
+from kivy.core.audio import SoundLoader
+import kivy.core 
+import random
+import math
+import datetime
+#import hashlib
+import os
+
+import var
+import load
+
+def read_file(fichier):
+    f=open(fichier,"r")
+    dta=[]
+    tmp=" "
+    while tmp!="":
+        tmp=f.readline()
+	dta.append(tmp.replace('\n','').replace(".asc",""))
+    f.close()            
+    return dta
+
+def find_files(f="*.*"):
+	os.system("echo "+f+">tmp.txt")		
+	tmpa=" "
+	tmpb=""
+	flm=open("tmp.txt","r")
+	while tmpa!="":
+		tmpa=flm.read(1)
+		if tmpa==chr(32):
+			tmpa=chr(10)
+		tmpb=tmpb+tmpa
+	flm.close()
+	flm=open("tmp.txt","w")
+	flm.write(tmpb)
+	flm.close()
+
+	xf=read_file("tmp.txt")
+	os.remove("tmp.txt")
+	xf.remove("")
+	return xf
+
+
+"""
+	DEBUT DES CLASSES DE L'INTERFACE
+"""
+var.lat,var.lon,var.name=load.main("Lidl_Fr"+".asc")
+class AffPrincipal(BoxLayout):
+	def confirm(self,fichier):
+		var.lat,var.lon,var.name=load.main(fichier+".asc")
+		print (var.lat,var.lon,var.name)
+	def confirmload(self,text):
+		R=(var.name.index(text))
+		print (var.lan[R], var.lon[R], text)		
+
+	def update(self,*args):
+		self.gridmain.box.boxf.spinaero.text=AffPrincipal.get_spin_f(self,1)
+		self.gridmain.box.boxf.spinaero.values=AffPrincipal.get_spin_f(self,0)
+
+	def update2(self,*args):
+		self.gridmain.box.boxf.spinaero2.text=AffPrincipal.get_spin_f2(self,1)
+		self.gridmain.box.boxf.spinaero2.values=AffPrincipal.get_spin_f2(self,0)
+
+	def get_spin_f(self,ind=0):
+		xf=find_files("*.asc")
+
+		if ind<1:
+			return xf
+		if ind>0:
+			return xf[ind-1]
+
+
+	def get_spin_f2(self,ind=0):
+		xf=var.name
+
+		if ind<1:
+			return xf
+		if ind>0:
+			return xf[ind]
+
+
+	def get_spin_c(self,ind=0):
+		xf=var.name
+
+		if ind<1:
+			return xf
+		if ind>0:
+			return xf[ind-1]
+
+	def WORK_RESS_f(self):
+		pass
+
+#Clock.schedule_interval(AffPrincipal.WORK_RESS_f, 2)
+
+"""
+	DEBUT DU CODE PRINCIPAL
+"""
+
+
+class mainApp(App):
+	App.icon=''
+	App.title="SELECT"
+
+	def build(self):
+        #===============================================================
+        #Création de la fenêtre, en fesant appel aux differentes classes
+        #===============================================================
+
+		root = BoxLayout() 
+		root.add_widget(AffPrincipal())
+		return root
+
+		
+if __name__ == '__main__':
+    Config.set('kivy','exit_on_escape','0')
+    Config.write()
+    Config.set('graphics','width','1200')
+    Config.set('graphics','height','800')
+    Config.write()
+    mainApp().run()
